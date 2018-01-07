@@ -6,7 +6,7 @@
     "@nasaworldwind/worldwind": "^0.9.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-scripts": "1.0.10"
+    "react-scripts": "1.0.17"
   },
   "scripts": {
     "start": "react-scripts start",
