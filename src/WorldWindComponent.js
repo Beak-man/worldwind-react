@@ -3,6 +3,11 @@ import WorldWind from '@nasaworldwind/worldwind';
 
 class WorldWindComponent extends Component{
 
+    constructor(props) {
+        super(props);
+        this.canvasRef = React.createRef();
+    }
+
     shouldComponentUpdate(){
         // WorldWind is not a regular React UI component. It should
         // be loaded once and never be updated again
@@ -15,12 +20,21 @@ class WorldWindComponent extends Component{
         // adding layers, etc.) applies here.
         
         // Create a World Window for the canvas. Note passing the
-        // Canvas id through a React ref.
-        this.wwd = new WorldWind.WorldWindow(this.refs.canvasOne.id);
+        // Canvas element through a React ref.
+        this.wwd = new WorldWind.WorldWindow(this.canvasRef.current);
         
         // Add layers to the WorldWindow
-        this.wwd.addLayer(new WorldWind.BMNGOneImageLayer());
-        this.wwd.addLayer(new WorldWind.BingAerialWithLabelsLayer());
+        
+        // Use OpenStreetMap as the primary layer
+        var osmLayer = new WorldWind.OpenStreetMapImageLayer("osm");
+        osmLayer.displayName = "OpenStreetMap";
+        this.wwd.addLayer(osmLayer);
+        
+        // Add BMNG with reduced opacity so you can see both
+        var bmngLayer = new WorldWind.BMNGOneImageLayer();
+        bmngLayer.opacity = 0.5;  // Make it semi-transparent
+        bmngLayer.displayName = "Blue Marble";
+        this.wwd.addLayer(bmngLayer);
         
         // Add a compass, a coordinates display and some view controls to the World Window.
         this.wwd.addLayer(new WorldWind.CompassLayer());
@@ -37,7 +51,7 @@ class WorldWindComponent extends Component{
         
         // JSX code to create canvas with WorldWindow
         return(
-            <canvas id="canvasOne" ref="canvasOne" style={style}>
+            <canvas id="canvasOne" ref={this.canvasRef} style={style}>
                 Your browser does not support HTML5 Canvas.
             </canvas>
         )
